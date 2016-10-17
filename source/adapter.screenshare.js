@@ -197,9 +197,12 @@
       };
 
       AdapterJS.getUserMedia = getUserMedia = window.getUserMedia = navigator.getUserMedia = window.navigator.getUserMedia = replaceGetUserMedia;
-      if ( navigator.mediaDevices &&
-        typeof Promise !== 'undefined') {
-        navigator.mediaDevices.getUserMedia = window.navigator.mediaDevices.getUserMedia = replaceGetUserMedia;
+      if (navigator.mediaDevices && typeof Promise !== 'undefined') {
+        navigator.mediaDevices.getUserMedia = window.navigator.mediaDevices.getUserMedia = function(constraints) {
+          return new Promise(function(resolve, reject) {
+            replaceGetUserMedia(constraints, resolve, reject);
+          });
+        };
       }
     }
 
