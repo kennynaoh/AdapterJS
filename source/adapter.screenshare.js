@@ -14,6 +14,8 @@
       BUTTON_CHROME: 'Go to Chrome Web Store'
     };
 
+    AdapterJS._screenshareBrowserifyTimeout = 1;
+
     var clone = function(obj) {
       if (null === obj || 'object' !== typeof obj) {
         return obj;
@@ -237,5 +239,5 @@
 
   // NOTE: Temp hotfix for gar.io or webrtc/adapter browserify replacements.
   // Should be done properly with browserify changes.
-  setTimeout(shimScreenshare, 1);
+  setTimeout(shimScreenshare, AdapterJS._screenshareBrowserifyTimeout);
 })();

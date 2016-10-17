@@ -43,13 +43,16 @@ AdapterJS.webRTCReady = function (callback) {
     throw new Error('Callback provided is not a function');
   }
 
-  if (true === AdapterJS.onwebrtcreadyDone) {
-    // All WebRTC interfaces are ready, just call the callback
-    callback(null !== AdapterJS.WebRTCPlugin.plugin);
-  } else {
-    // will be triggered automatically when your browser/plugin is ready.
-    AdapterJS._onwebrtcreadies.push(callback);
-  }
+  // Added this change to ensure sequential loading after the timeout configured in shimScreenshare.
+  setTimeout(function () {
+    if (true === AdapterJS.onwebrtcreadyDone) {
+      // All WebRTC interfaces are ready, just call the callback
+      callback(null !== AdapterJS.WebRTCPlugin.plugin);
+    } else {
+      // will be triggered automatically when your browser/plugin is ready.
+      AdapterJS._onwebrtcreadies.push(callback);
+    }
+  }, typeof AdapterJS._screenshareBrowserifyTimeout === 'number' ? AdapterJS._screenshareBrowserifyTimeout : 0);
 };
 
 // Plugin namespace
