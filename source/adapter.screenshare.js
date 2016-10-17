@@ -4,6 +4,7 @@
 
   var shimScreenshare = function () {
     var baseGetUserMedia = null;
+    var replaceGetUserMedia = null;
 
     AdapterJS.TEXT.EXTENSION = {
       REQUIRE_INSTALLATION_FF: 'To enable screensharing you need to install the Skylink WebRTC tools Firefox Add-on.',
@@ -28,8 +29,7 @@
 
     if (window.navigator.mozGetUserMedia) {
       baseGetUserMedia = window.navigator.getUserMedia;
-
-      navigator.getUserMedia = function (constraints, successCb, failureCb) {
+      replaceGetUserMedia = function (constraints, successCb, failureCb) {
 
         if (constraints && constraints.video && !!constraints.video.mediaSource) {
           // intercepting screensharing requests
@@ -68,7 +68,7 @@
         }
       };
 
-      AdapterJS.getUserMedia = window.getUserMedia = navigator.getUserMedia;
+      AdapterJS.getUserMedia = getUserMedia = window.getUserMedia = navigator.getUserMedia = window.navigator.getUserMedia = replaceGetUserMedia;
       /* Comment out to prevent recursive errors
       navigator.mediaDevices.getUserMedia = function(constraints) {
         return new Promise(function(resolve, reject) {
@@ -78,8 +78,7 @@
 
     } else if (window.navigator.webkitGetUserMedia && window.webrtcDetectedBrowser !== 'safari') {
       baseGetUserMedia = window.navigator.getUserMedia;
-
-      navigator.getUserMedia = function (constraints, successCb, failureCb) {
+      replaceGetUserMedia = function (constraints, successCb, failureCb) {
         if (constraints && constraints.video && !!constraints.video.mediaSource) {
           if (window.webrtcDetectedBrowser !== 'chrome') {
             // This is Opera, which does not support screensharing
@@ -154,10 +153,10 @@
         }
       };
 
-      AdapterJS.getUserMedia = window.getUserMedia = navigator.getUserMedia;
-      navigator.mediaDevices.getUserMedia = function(constraints) {
+      AdapterJS.getUserMedia = getUserMedia = window.getUserMedia = navigator.getUserMedia = window.navigator.getUserMedia = replaceGetUserMedia;
+      navigator.mediaDevices.getUserMedia = window.navigator.mediaDevices.getUserMedia = function(constraints) {
         return new Promise(function(resolve, reject) {
-          window.getUserMedia(constraints, resolve, reject);
+          replaceGetUserMedia(constraints, resolve, reject);
         });
       };
 
@@ -167,8 +166,7 @@
 
     } else {
       baseGetUserMedia = window.navigator.getUserMedia;
-
-      navigator.getUserMedia = function (constraints, successCb, failureCb) {
+      replaceGetUserMedia = function (constraints, successCb, failureCb) {
         if (constraints && constraints.video && !!constraints.video.mediaSource) {
           // would be fine since no methods
           var updatedConstraints = clone(constraints);
@@ -196,11 +194,10 @@
         }
       };
 
-      AdapterJS.getUserMedia = getUserMedia = 
-         window.getUserMedia = navigator.getUserMedia;
+      AdapterJS.getUserMedia = getUserMedia = window.getUserMedia = navigator.getUserMedia = window.navigator.getUserMedia = replaceGetUserMedia;
       if ( navigator.mediaDevices &&
         typeof Promise !== 'undefined') {
-        navigator.mediaDevices.getUserMedia = requestUserMedia;
+        navigator.mediaDevices.getUserMedia = window.navigator.mediaDevices.getUserMedia = replaceGetUserMedia;
       }
     }
 
