@@ -1,7 +1,4 @@
-(function () {
-
-  'use strict';
-
+var shimScreenshare = function () {
   var baseGetUserMedia = null;
 
   AdapterJS.TEXT.EXTENSION = {
@@ -233,4 +230,10 @@
   } else if (window.webrtcDetectedBrowser === 'opera') {
     console.warn('Opera does not support screensharing feature in getUserMedia');
   }
-})();
+};
+
+shimScreenshare();
+
+setTimeout(function () {
+  shimScreenshare();
+}, 1);
