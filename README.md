@@ -1,5 +1,6 @@
 <img src="https://cdn.temasys.io/branding/product/adapterjs/temasys-adapterjs.svg" alt="Temasys AdapterJS" width="450" />
 
+[![CDNJS](https://img.shields.io/cdnjs/v/adapterjs.svg)](https://cdnjs.com/libraries/adapterjs)
 > Creating a common API for WebRTC in the browser
 
 Find the most recent version hosted on our CDN.
